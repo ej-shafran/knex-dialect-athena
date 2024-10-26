@@ -13,7 +13,7 @@ export function createAthenaDialect(
     database: string;
     outputLocation: string;
   },
-) {
+): typeof Knex.Client {
   return class Client_Athena extends Client {
     dialect = "athena";
     driverName = "athena";
