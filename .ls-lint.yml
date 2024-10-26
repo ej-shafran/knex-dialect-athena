@@ -6,5 +6,6 @@ ls:
 ignore:
   - .git
   - .github
+  - .changeset
   - .husky
   - node_modules
