@@ -9,6 +9,10 @@
     "lint": {
       "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
       "outputs": []
+    },
+    "check-types": {
+      "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
+      "outputs": []
     }
   }
 }

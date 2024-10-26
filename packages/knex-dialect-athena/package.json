@@ -20,7 +20,8 @@
     "build": "tsup src/ --out-dir lib",
     "release": "npm run build && changeset publish",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "check-types": "tsc"
   },
   "files": [
     "lib"

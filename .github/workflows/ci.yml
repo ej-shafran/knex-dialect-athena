@@ -51,7 +51,7 @@ jobs:
 
       - name: Check Types
         run: |
-          pnpm tsc
+          pnpm check-types
 
       - name: Lint
         run: |
