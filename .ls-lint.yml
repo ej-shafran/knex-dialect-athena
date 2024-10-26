@@ -1,0 +1,10 @@
+ls:
+  .dir: kebab-case | regex:__.+__
+  .ts: kebab-case
+  .d.ts: kebab-case
+
+ignore:
+  - .git
+  - .github
+  - .husky
+  - node_modules

@@ -1,0 +1,60 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  ci:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/iron
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+
+      - name: Install
+        run: |
+          pnpm install
+
+      - name: Validate Last Commit Message
+        if: github.event_name == 'push'
+        run: |
+          pnpm commitlint --verbose --last
+
+      - name: Validate All Commit Messages
+        if: github.event_name == 'pull_request'
+        run: |
+          pnpm commitlint --verbose --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }}
+
+      - name: Lint File Names
+        run: |
+          pnpm ls-lint
+
+      - name: Check Formatting
+        run: |
+          pnpm format:check
+
+      - name: Lint
+        run: |
+          pnpm lint
+
+      - name: Knip
+        run: |
+          pnpm knip
+
+      - name: Check Changesets
+        run: |
+          pnpm changeset status

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "knex-dialect-athena",
+  "version": "0.0.0",
+  "author": "ej-shafran",
+  "license": "MIT",
+  "description": "A Knex dialect for AWS Athena",
+  "keywords": [
+    "knex",
+    "sql",
+    "aws",
+    "athena"
+  ],
+  "scripts": {
+    "build": "tsup src/ --out-dir lib",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "knip": "knip",
+    "knip:fix": "knip --fix",
+    "prepare": "husky"
+  },
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js"
+    },
+    "./athena-connection": {
+      "types": "./lib/athena-connection.d.ts",
+      "import": "./lib/athena-connection.mjs",
+      "require": "./lib/athena-connection.js"
+    }
+  },
+  "peerDependencies": {
+    "@aws-sdk/client-athena": "^3",
+    "knex": "^3"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.9",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@eslint/js": "^9.13.0",
+    "@ls-lint/ls-lint": "^2.2.3",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
+    "husky": "^9.1.6",
+    "knip": "^5.34.0",
+    "prettier": "^3.3.3",
+    "tarn": "^3.0.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.11.0"
+  },
+  "packageManager": "pnpm@9.12.1+sha512.e5a7e52a4183a02d5931057f7a0dbff9d5e9ce3161e33fa68ae392125b79282a8a8a470a51dfc8a0ed86221442eb2fb57019b0990ed24fab519bf0e1bc5ccfc4"
+}

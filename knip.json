@@ -1,0 +1,6 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/index.ts"],
+  "project": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
+  "ignoreDependencies": ["tarn"]
+}
