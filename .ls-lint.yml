@@ -4,8 +4,8 @@ ls:
   .d.ts: kebab-case
 
 ignore:
-  - .git
-  - .github
-  - .changeset
-  - .husky
-  - node_modules
+  - ".git"
+  - ".github"
+  - ".changeset"
+  - ".husky"
+  - "**/node_modules"
