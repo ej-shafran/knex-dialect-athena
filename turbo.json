@@ -4,7 +4,8 @@
   "tasks": {
     "build": {
       "inputs": ["src/*.{js,cjs,mjs,ts,cts,mts}"],
-      "outputs": ["{lib,dist}/*"]
+      "outputs": ["{lib,dist}/*"],
+      "dependsOn": ["^build"]
     },
     "lint": {
       "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
@@ -12,7 +13,8 @@
     },
     "check-types": {
       "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
-      "outputs": []
+      "outputs": [],
+      "dependsOn": ["^build"]
     }
   }
 }
