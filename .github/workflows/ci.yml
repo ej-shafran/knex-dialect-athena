@@ -63,4 +63,4 @@ jobs:
 
       - name: Check Changesets
         run: |
-          pnpm changeset status --since=main
+          pnpm changeset status --since=origin/main
