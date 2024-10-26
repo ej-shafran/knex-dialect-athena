@@ -47,6 +47,10 @@ jobs:
         run: |
           pnpm format:check
 
+      - name: Check Types
+        run: |
+          pnpm tsc
+
       - name: Lint
         run: |
           pnpm lint
@@ -57,4 +61,4 @@ jobs:
 
       - name: Check Changesets
         run: |
-          pnpm changeset status
+          pnpm changeset status --since=main

@@ -3,8 +3,8 @@
   "compilerOptions": {
     "target": "es2016",
     "rootDir": "./src",
-    "outDir": "./lib",
     "module": "NodeNext",
+    "noEmit": true,
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
