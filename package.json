@@ -17,6 +17,7 @@
   ],
   "scripts": {
     "build": "tsup src/ --out-dir lib",
+    "release": "npm run build && changeset publish",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
