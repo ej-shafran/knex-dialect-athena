@@ -1,0 +1,14 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "inputs": ["src/*.{js,cjs,mjs,ts,cts,mts}"],
+      "outputs": ["{lib,dist}/*"]
+    },
+    "lint": {
+      "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
+      "outputs": []
+    }
+  }
+}
