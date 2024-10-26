@@ -5,6 +5,10 @@
   "author": "ej-shafran",
   "license": "MIT",
   "description": "A Knex dialect for AWS Athena",
+  "repository": {
+    "url": "https://github.com/ej-shafran/knex-dialect-athena.git",
+    "type": "git"
+  },
   "keywords": [
     "knex",
     "sql",
