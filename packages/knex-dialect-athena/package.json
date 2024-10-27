@@ -23,7 +23,8 @@
     "check-types": "tsc"
   },
   "files": [
-    "lib"
+    "lib",
+    "CHANGELOG.md"
   ],
   "exports": {
     ".": {
