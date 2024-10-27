@@ -4,10 +4,10 @@ A [Knex](https://knexjs.org/) dialect for [AWS Athena](https://docs.aws.amazon.c
 
 ## Installation
 
-Using your favorite package manager, install `knex-dialect-athena`:
+Using your favorite package manager, install `knex-dialect-athena`, along with its peer dependencies (if you don't already have them installed):
 
 ```bash
-npm install knex-dialect-athena
+npm install knex-dialect-athena knex @aws-sdk/client-athena
 ```
 
 ## Usage
