@@ -15,11 +15,6 @@
       "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
       "outputs": [],
       "dependsOn": ["^build"]
-    },
-    "release": {
-      "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}", "README.md", "LICENSE"],
-      "outputs": [],
-      "dependsOn": ["build"]
     }
   }
 }
