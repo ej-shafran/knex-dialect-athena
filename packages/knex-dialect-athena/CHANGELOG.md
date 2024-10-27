@@ -1,5 +1,11 @@
 # knex-dialect-athena
 
+## 0.0.4
+
+### Patch Changes
+
+- 3293099: Add CHANGELOG to package files.
+
 ## 0.0.3
 
 ### Patch Changes
