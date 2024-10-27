@@ -39,7 +39,6 @@ jobs:
         with:
           publish: pnpm release
           commit: "chore: version packages"
-          setupGitUser: false
         env:
           GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
