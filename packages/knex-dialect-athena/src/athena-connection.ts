@@ -40,7 +40,7 @@ export class AthenaConnection {
   ) {
     return new StartQueryExecutionCommand({
       QueryString: queryString,
-      ExecutionParameters: parameters,
+      ExecutionParameters: parameters.length <= 0 ? undefined : parameters,
       QueryExecutionContext: {
         Database: this.database,
       },
