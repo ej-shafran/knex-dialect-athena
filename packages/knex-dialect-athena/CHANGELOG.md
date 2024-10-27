@@ -1,5 +1,11 @@
 # knex-dialect-athena
 
+## 0.0.3
+
+### Patch Changes
+
+- d5a9e8f: Make queries with no parameters work properly.
+
 ## 0.0.2
 
 ### Patch Changes
