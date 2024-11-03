@@ -16,5 +16,5 @@ export default tseslint.config(
       },
     },
   },
-  { ignores: ["lib/", "*.config.{js,cjs,mjs,ts,cts,mts}"] },
+  { ignores: ["lib/", "dist/", "*.config.{js,cjs,mjs,ts,cts,mts}"] },
 );
