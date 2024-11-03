@@ -1,5 +1,11 @@
 # knex-dialect-athena
 
+## 0.0.5
+
+### Patch Changes
+
+- ce25a3b: Fix issue with date strings being parsed as number.
+
 ## 0.0.4
 
 ### Patch Changes
