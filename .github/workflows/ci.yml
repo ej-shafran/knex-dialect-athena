@@ -41,29 +41,16 @@ jobs:
         run: |
           pnpm commitlint --verbose --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }}
 
-      - name: Lint File Names
-        run: |
-          pnpm ls-lint
+      - name: Turbo Cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-
 
-      - name: Check Formatting
+      - name: Turbo Pipeline
         run: |
-          pnpm format:check
-
-      - name: Check Types
-        run: |
-          pnpm check-types
-
-      - name: Lint
-        run: |
-          pnpm lint
-
-      - name: Knip
-        run: |
-          pnpm knip
-
-      - name: Tests
-        run: |
-          pnpm test
+          pnpm run pipeline --cache-dir=.turbo
 
       - name: Check Changesets
         if: github.event_name != 'pull_request' || github.head_ref != 'changeset-release/main'

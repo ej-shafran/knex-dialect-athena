@@ -3,14 +3,17 @@
   "name": "root",
   "private": true,
   "scripts": {
+    "pipeline": "turbo run build lint check-types test format:check ls-lint knip",
+    "pipeline:fix": "turbo run format knip:fix lint:fix",
+    "release": "turbo run build && changeset publish",
     "build": "turbo run build",
-    "release": "npm run build && changeset publish",
     "test": "turbo run test",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
     "check-types": "turbo run check-types",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "ls-lint": "ls-lint",
     "knip": "knip",
     "knip:fix": "knip --fix",
     "prepare": "husky"

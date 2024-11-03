@@ -9,7 +9,12 @@
     },
     "lint": {
       "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
-      "outputs": []
+      "outputs": [],
+      "dependsOn": ["^build"]
+    },
+    "lint:fix": {
+      "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
+      "outputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"]
     },
     "check-types": {
       "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
@@ -18,6 +23,26 @@
     },
     "test": {
       "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
+      "outputs": []
+    },
+    "//#ls-lint": {
+      "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
+      "outputs": []
+    },
+    "//#knip": {
+      "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
+      "outputs": []
+    },
+    "//#knip:fix": {
+      "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"],
+      "outputs": ["**/*.{js,cjs,mjs,ts,cts,mts}"]
+    },
+    "//#format": {
+      "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts,md}"],
+      "outputs": ["**/*.{js,cjs,mjs,ts,cts,mts,md}"]
+    },
+    "//#format:check": {
+      "inputs": ["**/*.{js,cjs,mjs,ts,cts,mts,md}"],
       "outputs": []
     }
   }
