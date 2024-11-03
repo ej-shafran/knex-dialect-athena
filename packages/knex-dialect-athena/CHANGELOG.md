@@ -1,5 +1,11 @@
 # knex-dialect-athena
 
+## 0.0.6
+
+### Patch Changes
+
+- d3a7d14: Fix order of LIMIT and OFFSET statements.
+
 ## 0.0.5
 
 ### Patch Changes
