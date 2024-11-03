@@ -1,5 +1,6 @@
 import Knex from "knex";
 import { AthenaConnection } from "./athena-connection";
+import { QueryCompiler_Athena as QueryCompiler } from "./athena-querycompiler";
 import { AthenaClientConfig } from "@aws-sdk/client-athena";
 // Fixes "non-portable" issue with PNPM
 import type {} from "tarn";
@@ -26,6 +27,13 @@ export function createAthenaDialect(
     }
 
     releaseConnection = noOp;
+
+    queryCompiler = ((builder: Knex.QueryBuilder, bindings: unknown[]) =>
+      new QueryCompiler(
+        this,
+        builder,
+        bindings,
+      )) as Knex.Knex.Client["queryCompiler"];
 
     async _query(
       connection: AthenaConnection,
