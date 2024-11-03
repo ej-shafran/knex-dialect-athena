@@ -56,7 +56,7 @@ export function createAthenaDialect(
         }
 
         const parsedAsNumber = Number(value);
-        if (value && !Number.isNaN(parsedAsNumber)) {
+        if (value.trim() && !Number.isNaN(parsedAsNumber)) {
           result[key] = parsedAsNumber;
           continue;
         }
