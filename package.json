@@ -5,6 +5,7 @@
   "scripts": {
     "build": "turbo run build",
     "release": "npm run build && changeset publish",
+    "test": "turbo run test",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
     "check-types": "turbo run check-types",

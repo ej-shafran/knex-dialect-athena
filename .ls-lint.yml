@@ -3,9 +3,13 @@ ls:
   .ts: kebab-case
   .d.ts: kebab-case
 
+  "**/test":
+    .test.ts: kebab-case
+
 ignore:
   - ".git"
   - ".github"
   - ".changeset"
   - ".husky"
+  - "**/.turbo"
   - "**/node_modules"

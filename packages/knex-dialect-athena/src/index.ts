@@ -1,4 +1,4 @@
-import { Knex, Client } from "knex";
+import Knex from "knex";
 import { AthenaConnection } from "./athena-connection";
 import { AthenaClientConfig } from "@aws-sdk/client-athena";
 // Fixes "non-portable" issue with PNPM
@@ -13,8 +13,8 @@ export function createAthenaDialect(
     database: string;
     outputLocation: string;
   },
-): typeof Knex.Client {
-  return class Client_Athena extends Client {
+): typeof Knex.Knex.Client {
+  return class Client_Athena extends Knex.Client {
     dialect = "athena";
     driverName = "athena";
 
@@ -29,7 +29,7 @@ export function createAthenaDialect(
 
     async _query(
       connection: AthenaConnection,
-      obj: Knex.Sql & { response: unknown[] },
+      obj: Knex.Knex.Sql & { response: unknown[] },
     ) {
       if (!obj.sql) throw new Error("The query is empty");
 
@@ -55,8 +55,8 @@ export function createAthenaDialect(
           continue;
         }
 
-        const parsedAsNumber = parseFloat(value);
-        if (value && !Number.isNaN(parsedAsNumber)) {
+        const parsedAsNumber = Number(value);
+        if (value.trim() && !Number.isNaN(parsedAsNumber)) {
           result[key] = parsedAsNumber;
           continue;
         }
@@ -72,7 +72,7 @@ export function createAthenaDialect(
     }
 
     processResponse(
-      obj: Knex.Sql & {
+      obj: Knex.Knex.Sql & {
         response: Record<string, string>[];
         pluck?: string;
       },
