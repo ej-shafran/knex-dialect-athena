@@ -1,5 +1,6 @@
 import { describe, expect } from "vitest";
-import { fc, it } from "@fast-check/vitest";
+import { it } from "@fast-check/vitest";
+import fc from "fast-check";
 import { createAthenaDialect } from "../src";
 
 const Client_Athena = createAthenaDialect({
