@@ -69,6 +69,9 @@ importers:
       '@aws-sdk/client-athena':
         specifier: ^3
         version: 3.679.0
+      debug:
+        specifier: ^4.3.7
+        version: 4.3.7
       knex:
         specifier: ^3
         version: 3.1.0
@@ -79,6 +82,9 @@ importers:
       '@fast-check/vitest':
         specifier: ^0.1.4
         version: 0.1.4(vitest@2.1.4(@types/node@22.8.1))
+      '@types/debug':
+        specifier: ^4.1.12
+        version: 4.1.12
       '@types/lodash':
         specifier: ^4.17.13
         version: 4.17.13
@@ -1139,6 +1145,9 @@ packages:
   '@types/conventional-commits-parser@5.0.0':
     resolution: {integrity: sha512-loB369iXNmAZglwWATL+WRe+CRMmmBPtpolYzIebFaX4YA3x+BEfLqhUAV9WanycKI3TG1IMr5bMJDajDKLlUQ==}
 
+  '@types/debug@4.1.12':
+    resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
+
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
 
@@ -1147,6 +1156,9 @@ packages:
 
   '@types/lodash@4.17.13':
     resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
+
+  '@types/ms@0.7.34':
+    resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
 
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
@@ -4000,11 +4012,17 @@ snapshots:
     dependencies:
       '@types/node': 22.8.1
 
+  '@types/debug@4.1.12':
+    dependencies:
+      '@types/ms': 0.7.34
+
   '@types/estree@1.0.6': {}
 
   '@types/json-schema@7.0.15': {}
 
   '@types/lodash@4.17.13': {}
+
+  '@types/ms@0.7.34': {}
 
   '@types/node@12.20.55': {}
 

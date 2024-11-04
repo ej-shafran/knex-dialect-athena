@@ -9,6 +9,9 @@ import {
   StartQueryExecutionCommand,
 } from "@aws-sdk/client-athena";
 import { assert } from "./assert";
+import { packageDebug } from "./debug";
+
+const debug = packageDebug.extend("connection");
 
 export class AthenaConnection {
   private readonly client: AthenaClient;
@@ -74,6 +77,8 @@ export class AthenaConnection {
   }
 
   private async waitForQueryExecution(queryExecutionId: string) {
+    debug("starting wait for query execution (id %s)", queryExecutionId);
+
     // TODO: make configurable by constructor
     const maxWaitMilliseconds = 30_000;
     const backoffStepMilliseconds = 250;
@@ -86,10 +91,13 @@ export class AthenaConnection {
         retryInMilliseconds += backoffStepMilliseconds;
         overallTimeElapsedMilliseconds += retryInMilliseconds;
       }
+      debug("waiting for %dms (id %s)", retryInMilliseconds, queryExecutionId);
       await new Promise((resolve) => setTimeout(resolve, retryInMilliseconds));
       const executionResponse = await this.client.send(
         this.getQueryExecutionCommand(queryExecutionId),
       );
+      debug("got query execution response: %o", executionResponse);
+
       assert(
         !!executionResponse.QueryExecution,
         executionResponse,
@@ -112,12 +120,16 @@ export class AthenaConnection {
   private mapQueryResults<T extends Record<string, string | null>>(
     resultSet: ResultSet,
   ) {
+    debug("mapping over result set: %o", resultSet);
+
     assert(!!resultSet.Rows, resultSet, "missing Rows");
 
     const columns = resultSet.Rows[0]?.Data?.map(
       (datum) => datum.VarCharValue,
     ).filter((value): value is string => !!value);
     assert(!!columns, resultSet.Rows, "missing column specifiers");
+
+    debug("using columns: %o", columns);
 
     return resultSet.Rows.slice(1).map((row) => {
       const result: Record<string, string | null> = {};
@@ -137,8 +149,16 @@ export class AthenaConnection {
     queryString: string,
     parameters: string[] = [],
   ) {
+    debug("starting query execution");
+    debug("query: %s", queryString);
+    debug("parameters: %o", parameters);
+
     const startQueryExecutionResponse = await this.client.send(
       this.startQueryExecutionCommand(queryString, parameters),
+    );
+    debug(
+      "got start query execution response: %o",
+      startQueryExecutionResponse,
     );
     assert(
       !!startQueryExecutionResponse.QueryExecutionId,
@@ -149,6 +169,7 @@ export class AthenaConnection {
     const queryExecution = await this.waitForQueryExecution(
       startQueryExecutionResponse.QueryExecutionId,
     );
+    debug("final query execution: %o", queryExecution);
     assert(
       queryExecution.Status?.State === QueryExecutionState.SUCCEEDED,
       queryExecution,
@@ -158,8 +179,11 @@ export class AthenaConnection {
     const resultsResponse = await this.client.send(
       this.getQueryResultsCommand(startQueryExecutionResponse.QueryExecutionId),
     );
+    debug("got full results response: %o", resultsResponse);
     assert(!!resultsResponse.ResultSet, resultsResponse, "missing ResultSet");
 
-    return this.mapQueryResults<T>(resultsResponse.ResultSet);
+    const results = this.mapQueryResults<T>(resultsResponse.ResultSet);
+    debug("mapped results: %o", results);
+    return results;
   }
 }

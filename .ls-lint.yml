@@ -13,3 +13,5 @@ ignore:
   - ".husky"
   - "**/.turbo"
   - "**/node_modules"
+  - "**/dist"
+  - "**/lib"
