@@ -1,5 +1,11 @@
 # knex-dialect-athena
 
+## 0.0.7
+
+### Patch Changes
+
+- 5ac9f25: Add debug logs to package.
+
 ## 0.0.6
 
 ### Patch Changes
