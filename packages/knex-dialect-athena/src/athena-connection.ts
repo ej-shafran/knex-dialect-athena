@@ -96,7 +96,11 @@ export class AthenaConnection {
       const executionResponse = await this.client.send(
         this.getQueryExecutionCommand(queryExecutionId),
       );
-      debug("got query execution response: %o", executionResponse);
+      debug(
+        "query execution state (id %s): %o",
+        queryExecutionId,
+        executionResponse.QueryExecution?.Status?.State,
+      );
 
       assert(
         !!executionResponse.QueryExecution,
@@ -150,7 +154,7 @@ export class AthenaConnection {
     parameters: string[] = [],
   ) {
     debug("starting query execution");
-    debug("query: %s", queryString);
+    debug("query: %o", queryString);
     debug("parameters: %o", parameters);
 
     const startQueryExecutionResponse = await this.client.send(
@@ -169,7 +173,11 @@ export class AthenaConnection {
     const queryExecution = await this.waitForQueryExecution(
       startQueryExecutionResponse.QueryExecutionId,
     );
-    debug("final query execution: %o", queryExecution);
+    debug(
+      "final query execution state (id %s): %o",
+      startQueryExecutionResponse.QueryExecutionId,
+      queryExecution.Status?.State,
+    );
     assert(
       queryExecution.Status?.State === QueryExecutionState.SUCCEEDED,
       queryExecution,
