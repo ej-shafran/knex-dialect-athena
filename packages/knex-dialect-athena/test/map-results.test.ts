@@ -89,7 +89,7 @@ const updateCountArb = () => fc.nat();
 const userResultSetProperty = it.prop([userResultSetArb()], { numRuns: 40 });
 const updateCountProperty = it.prop([updateCountArb()], { numRuns: 40 });
 
-const mockAthenaDDLQuery = (resultSet: ResultSet) =>
+const mockAthenaSelectingQuery = (resultSet: ResultSet) =>
   nock(/.*/)
     .post("/")
     .matchHeader("x-amz-target", "AmazonAthena.StartQueryExecution")
@@ -106,10 +106,7 @@ const mockAthenaDDLQuery = (resultSet: ResultSet) =>
       200,
       (): GetQueryExecutionCommandOutput => ({
         $metadata: {},
-        QueryExecution: {
-          Status: { State: "SUCCEEDED" },
-          StatementType: "DDL",
-        },
+        QueryExecution: { Status: { State: "SUCCEEDED" } },
       }),
     )
     .post("/")
@@ -122,7 +119,7 @@ const mockAthenaDDLQuery = (resultSet: ResultSet) =>
       }),
     );
 
-const mockAthenaDMLQuery = (updateCount: number) =>
+const mockAthenaUpdatingQuery = (updateCount: number) =>
   nock(/.*/)
     .post("/")
     .matchHeader("x-amz-target", "AmazonAthena.StartQueryExecution")
@@ -139,10 +136,7 @@ const mockAthenaDMLQuery = (updateCount: number) =>
       200,
       (): GetQueryExecutionCommandOutput => ({
         $metadata: {},
-        QueryExecution: {
-          Status: { State: "SUCCEEDED" },
-          StatementType: "DML",
-        },
+        QueryExecution: { Status: { State: "SUCCEEDED" } },
       }),
     )
     .post("/")
@@ -163,11 +157,11 @@ describe("mapping over results", () => {
     }),
   });
 
-  describe("DDL queries", () => {
+  describe("selecting queries", () => {
     userResultSetProperty(
       "should transform things to their correct type",
       async (resultSet) => {
-        mockAthenaDDLQuery(resultSet);
+        mockAthenaSelectingQuery(resultSet);
 
         const result = await knex<User>("users").select("*").first();
         expect(result).toBeDefined();
@@ -178,9 +172,9 @@ describe("mapping over results", () => {
     );
   });
 
-  describe("DML queries", () => {
+  describe("updating queries", () => {
     updateCountProperty("should not do any mapping", async (updateCount) => {
-      mockAthenaDMLQuery(updateCount);
+      mockAthenaUpdatingQuery(updateCount);
 
       const result = await knex.insert({}).into("users");
       expect(result).toBe(updateCount);
