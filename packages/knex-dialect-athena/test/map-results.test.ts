@@ -155,6 +155,7 @@ describe("mapping over results", () => {
     client: createAthenaDialect({
       database: "",
       outputLocation: "",
+      region: "region",
     }),
   });
 
