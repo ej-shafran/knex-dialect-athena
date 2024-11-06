@@ -201,12 +201,11 @@ export class AthenaConnection {
     );
     debug("got full results response: %o", resultsResponse);
 
-    if (queryExecution.StatementType === "DML") {
-      debug("DML statement; returning update count");
+    if (!resultsResponse.ResultSet?.Rows?.[0]) {
+      debug("no rows (or column specifiers); returning update count");
       return resultsResponse.UpdateCount;
     }
 
-    assert(!!resultsResponse.ResultSet, resultsResponse, "missing ResultSet");
     const results = this.mapQueryResults<T>(resultsResponse.ResultSet);
     debug("mapped results: %o", results);
     return results;
