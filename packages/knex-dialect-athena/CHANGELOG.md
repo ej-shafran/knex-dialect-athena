@@ -1,5 +1,12 @@
 # knex-dialect-athena
 
+## 0.0.9
+
+### Patch Changes
+
+- 3f38980: Fix checks for whether a request should return an update count or results.
+- 3f38980: Stop misusing the terms "DDL" and "DML".
+
 ## 0.0.8
 
 ### Patch Changes
