@@ -12,6 +12,10 @@ import {
 } from "@aws-sdk/client-athena";
 import fc from "fast-check";
 
+// Create fake AWS credentials so the credential provider does not error
+process.env.AWS_ACCESS_KEY_ID = crypto.randomUUID();
+process.env.AWS_SECRET_ACCESS_KEY = crypto.randomUUID();
+
 interface User {
   id: string;
   age: number;
@@ -155,7 +159,6 @@ describe("mapping over results", () => {
     client: createAthenaDialect({
       database: "",
       outputLocation: "",
-      region: "region",
     }),
   });
 
