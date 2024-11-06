@@ -1,5 +1,12 @@
 # knex-dialect-athena
 
+## 0.0.8
+
+### Patch Changes
+
+- 45b45c9: Simplify debug logs.
+- 045ec56: Don't error when making DML requests.
+
 ## 0.0.7
 
 ### Patch Changes
