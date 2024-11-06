@@ -121,27 +121,39 @@ export class AthenaConnection {
 
   // Mapping query results
 
-  private mapQueryResults<T extends Record<string, string | null>>(
+  private mapQueryResults<T extends Record<string, unknown>>(
     resultSet: ResultSet,
   ) {
     debug("mapping over result set: %o", resultSet);
 
     assert(!!resultSet.Rows, resultSet, "missing Rows");
 
-    const columns = resultSet.Rows[0]?.Data?.map(
-      (datum) => datum.VarCharValue,
-    ).filter((value): value is string => !!value);
-    assert(!!columns, resultSet.Rows, "missing column specifiers");
+    const columns = resultSet.ResultSetMetadata?.ColumnInfo;
+    assert(!!columns, resultSet.ResultSetMetadata, "missing column specifiers");
 
     debug("using columns: %o", columns);
 
     return resultSet.Rows.slice(1).map((row) => {
-      const result: Record<string, string | null> = {};
+      const result: Record<string, unknown> = {};
 
       let index = 0;
       for (const column of columns) {
         const datum = row.Data?.[index++]?.VarCharValue ?? null;
-        result[column] = datum;
+
+        assert(!!column.Name, column, "missing Name");
+
+        // TODO: handle other cases
+        switch (column.Type) {
+          case "integer":
+            result[column.Name] = datum === null ? datum : parseInt(datum);
+            break;
+          case "json":
+            result[column.Name] = datum === null ? datum : JSON.parse(datum);
+            break;
+          default:
+            result[column.Name] = datum;
+            break;
+        }
       }
       return result as T;
     });
@@ -149,7 +161,7 @@ export class AthenaConnection {
 
   // Public API
 
-  async query<T extends Record<string, string | null>>(
+  async query<T extends Record<string, unknown>>(
     queryString: string,
     parameters: string[] = [],
   ) {
@@ -188,8 +200,13 @@ export class AthenaConnection {
       this.getQueryResultsCommand(startQueryExecutionResponse.QueryExecutionId),
     );
     debug("got full results response: %o", resultsResponse);
-    assert(!!resultsResponse.ResultSet, resultsResponse, "missing ResultSet");
 
+    if (queryExecution.StatementType === "DML") {
+      debug("DML statement; returning update count");
+      return resultsResponse.UpdateCount;
+    }
+
+    assert(!!resultsResponse.ResultSet, resultsResponse, "missing ResultSet");
     const results = this.mapQueryResults<T>(resultsResponse.ResultSet);
     debug("mapped results: %o", results);
     return results;

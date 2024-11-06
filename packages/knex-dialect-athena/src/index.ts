@@ -37,7 +37,7 @@ export function createAthenaDialect(
 
     async _query(
       connection: AthenaConnection,
-      obj: Knex.Knex.Sql & { response: unknown[] },
+      obj: Knex.Knex.Sql & { response: unknown },
     ) {
       if (!obj.sql) throw new Error("The query is empty");
 
@@ -51,37 +51,9 @@ export function createAthenaDialect(
       return obj;
     }
 
-    _processRow(row: Record<string, string | null>) {
-      const result: Record<string, unknown> = {};
-      for (const key of Object.getOwnPropertyNames(row)) {
-        const value = row[key];
-
-        if (value === undefined) continue;
-
-        if (value === null) {
-          result[key] = null;
-          continue;
-        }
-
-        const parsedAsNumber = Number(value);
-        if (value.trim() && !Number.isNaN(parsedAsNumber)) {
-          result[key] = parsedAsNumber;
-          continue;
-        }
-
-        if (["true", "false"].includes(value.toLowerCase())) {
-          result[key] = value.toLowerCase() === "true";
-          continue;
-        }
-
-        result[key] = value;
-      }
-      return result;
-    }
-
     processResponse(
       obj: Knex.Knex.Sql & {
-        response: Record<string, string>[];
+        response: Record<string, unknown>[];
         pluck?: string;
       },
     ) {
@@ -89,16 +61,16 @@ export function createAthenaDialect(
       if (obj.method === "first") {
         if (!obj.response[0])
           throw new Error("Called `.first` but no rows were returned");
-        return this._processRow(obj.response[0]);
+        return obj.response[0];
       }
 
       if (obj.method === "pluck")
         return obj.response.map((row) => {
           assert(!!obj.pluck, obj);
-          return this._processRow(row)[obj.pluck];
+          return row[obj.pluck];
         });
 
-      return obj.response.map((row) => this._processRow(row));
+      return obj.response;
     }
   };
 }
