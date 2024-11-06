@@ -15,6 +15,7 @@ import fc from "fast-check";
 // Create fake AWS credentials so the credential provider does not error
 process.env.AWS_ACCESS_KEY_ID = crypto.randomUUID();
 process.env.AWS_SECRET_ACCESS_KEY = crypto.randomUUID();
+process.env.AWS_REGION = crypto.randomUUID();
 
 interface User {
   id: string;
