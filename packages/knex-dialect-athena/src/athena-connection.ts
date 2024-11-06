@@ -202,7 +202,7 @@ export class AthenaConnection {
     debug("got full results response: %o", resultsResponse);
 
     if (queryExecution.StatementType === "DML") {
-      debug("DDL statement; returning update count");
+      debug("DML statement; returning update count");
       return resultsResponse.UpdateCount;
     }
 
