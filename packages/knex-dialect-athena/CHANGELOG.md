@@ -1,5 +1,11 @@
 # knex-dialect-athena
 
+## 0.0.10
+
+### Patch Changes
+
+- 1c0e7ad: Support (almost) all Athena datatypes.
+
 ## 0.0.9
 
 ### Patch Changes
