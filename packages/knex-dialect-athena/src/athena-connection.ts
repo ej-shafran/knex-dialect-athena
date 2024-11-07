@@ -142,13 +142,36 @@ export class AthenaConnection {
 
         assert(!!column.Name, column, "missing Name");
 
-        // TODO: handle other cases
+        // See:
+        // - https://docs.aws.amazon.com/athena/latest/ug/data-types-examples.html
+        // - https://docs.aws.amazon.com/athena/latest/ug/data-types.html
+        // TODO: figure out what to do for date-related types
         switch (column.Type) {
+          case "boolean":
+            result[column.Name] = datum === null ? datum : datum === "true";
+            break;
+          case "tinyint":
+          case "smallint":
           case "integer":
+          case "int":
+          case "bigint":
             result[column.Name] = datum === null ? datum : parseInt(datum);
+            break;
+          case "real":
+          case "double":
+          case "decimal":
+            result[column.Name] = datum === null ? datum : parseFloat(datum);
             break;
           case "json":
             result[column.Name] = datum === null ? datum : JSON.parse(datum);
+            break;
+          case "varbinary":
+            result[column.Name] =
+              datum === null
+                ? datum
+                : new Uint8Array(
+                    datum.split(" ").map((byte) => parseInt(byte, 16)),
+                  );
             break;
           default:
             result[column.Name] = datum;

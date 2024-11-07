@@ -20,12 +20,26 @@ process.env.AWS_REGION = crypto.randomUUID();
 interface User {
   id: string;
   age: number;
+  net_worth: number;
   roles: unknown;
+  is_alive: boolean;
+  raw_data: Uint8Array;
 }
 
-const typeArb = (type: string | undefined) => {
-  if (type === "json") return fc.object();
-  if (type === "integer") return fc.nat();
+const typeArb = (type: string | undefined): fc.Arbitrary<string> => {
+  if (type === "json") return fc.object().map(JSON.stringify);
+  if (type === "integer" || type === "int" || type === "bigint")
+    return fc.integer().map(String);
+  if (type === "decimal" || type === "double" || type === "real")
+    return fc.float().map(String);
+  if (type === "boolean") return fc.boolean().map(String);
+  if (type === "varbinary")
+    return fc.uint8Array().map(
+      (array) =>
+        `X${Array.from(array)
+          .map((byte) => byte.toString(16))
+          .join(" ")}`,
+    );
   return fc.string();
 };
 
@@ -55,7 +69,7 @@ const resultSetArb = (
           Data: fc.tuple(
             ...columnInfo.map((column) =>
               typeArb(column.Type).map((value) => ({
-                VarCharValue: JSON.stringify(value),
+                VarCharValue: value,
               })),
             ),
           ),
@@ -77,6 +91,9 @@ const userResultSetArb = () =>
     [
       { Name: "id", Type: "varchar" },
       { Name: "age", Type: "integer" },
+      { Name: "net_worth", Type: "real" },
+      { Name: "is_alive", Type: "boolean" },
+      { Name: "raw_data", Type: "varbinary" },
       { Name: "roles", Type: "json" },
     ],
     {
@@ -167,6 +184,9 @@ describe("mapping over results", () => {
         expect(result).toBeDefined();
         expect(result?.id).toBeTypeOf("string");
         expect(result?.age).toBeTypeOf("number");
+        expect(result?.net_worth).toBeTypeOf("number");
+        expect(result?.is_alive).toBeTypeOf("boolean");
+        expect(result?.raw_data).toBeInstanceOf(Uint8Array);
         expect(result?.roles).toBeDefined();
       },
     );
