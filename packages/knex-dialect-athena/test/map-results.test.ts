@@ -1,21 +1,12 @@
-import Knex from "knex";
-import nock from "nock";
 import { describe, expect } from "vitest";
 import { it } from "@fast-check/vitest";
-import { createAthenaDialect } from "../src";
-import {
-  ColumnInfo,
-  GetQueryExecutionCommandOutput,
-  GetQueryResultsCommandOutput,
-  ResultSet,
-  StartQueryExecutionCommandOutput,
-} from "@aws-sdk/client-athena";
+import { ColumnInfo, ResultSet } from "@aws-sdk/client-athena";
 import fc from "fast-check";
-
-// Create fake AWS credentials so the credential provider does not error
-process.env.AWS_ACCESS_KEY_ID = crypto.randomUUID();
-process.env.AWS_SECRET_ACCESS_KEY = crypto.randomUUID();
-process.env.AWS_REGION = crypto.randomUUID();
+import {
+  mockAthenaSelectingQuery,
+  mockAthenaUpdatingQuery,
+} from "./helpers/mock";
+import { fakeAthenaKnex } from "./helpers/knex";
 
 interface User {
   id: string;
@@ -106,73 +97,8 @@ const updateCountArb = () => fc.nat();
 const userResultSetProperty = it.prop([userResultSetArb()], { numRuns: 40 });
 const updateCountProperty = it.prop([updateCountArb()], { numRuns: 40 });
 
-const mockAthenaSelectingQuery = (resultSet: ResultSet) =>
-  nock(/.*/)
-    .post("/")
-    .matchHeader("x-amz-target", "AmazonAthena.StartQueryExecution")
-    .reply(
-      200,
-      (): StartQueryExecutionCommandOutput => ({
-        $metadata: {},
-        QueryExecutionId: "123",
-      }),
-    )
-    .post("/")
-    .matchHeader("x-amz-target", "AmazonAthena.GetQueryExecution")
-    .reply(
-      200,
-      (): GetQueryExecutionCommandOutput => ({
-        $metadata: {},
-        QueryExecution: { Status: { State: "SUCCEEDED" } },
-      }),
-    )
-    .post("/")
-    .matchHeader("x-amz-target", "AmazonAthena.GetQueryResults")
-    .reply(
-      200,
-      (): GetQueryResultsCommandOutput => ({
-        $metadata: {},
-        ResultSet: resultSet,
-      }),
-    );
-
-const mockAthenaUpdatingQuery = (updateCount: number) =>
-  nock(/.*/)
-    .post("/")
-    .matchHeader("x-amz-target", "AmazonAthena.StartQueryExecution")
-    .reply(
-      200,
-      (): StartQueryExecutionCommandOutput => ({
-        $metadata: {},
-        QueryExecutionId: "123",
-      }),
-    )
-    .post("/")
-    .matchHeader("x-amz-target", "AmazonAthena.GetQueryExecution")
-    .reply(
-      200,
-      (): GetQueryExecutionCommandOutput => ({
-        $metadata: {},
-        QueryExecution: { Status: { State: "SUCCEEDED" } },
-      }),
-    )
-    .post("/")
-    .matchHeader("x-amz-target", "AmazonAthena.GetQueryResults")
-    .reply(
-      200,
-      (): GetQueryResultsCommandOutput => ({
-        $metadata: {},
-        UpdateCount: updateCount,
-      }),
-    );
-
 describe("mapping over results", () => {
-  const knex = Knex({
-    client: createAthenaDialect({
-      database: "",
-      outputLocation: "",
-    }),
-  });
+  const knex = fakeAthenaKnex();
 
   describe("selecting queries", () => {
     userResultSetProperty(
