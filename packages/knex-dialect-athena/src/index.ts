@@ -35,6 +35,17 @@ export function createAthenaDialect(
         bindings,
       )) as Knex.Knex.Client["queryCompiler"];
 
+    processBinding(binding: Knex.Knex.Value): string {
+      if (binding === null) return "null";
+      // TODO: figure out how to stringify dates
+      if (binding instanceof Date)
+        throw new Error("Date bindings are not (yet) supported");
+      // TODO: figure out how to stringify arrays, and if we should even do it
+      if (Array.isArray(binding))
+        throw new Error("Array bindings are not supported");
+      return String(binding);
+    }
+
     async _query(
       connection: AthenaConnection,
       obj: Knex.Knex.Sql & { response: unknown },
@@ -43,8 +54,7 @@ export function createAthenaDialect(
 
       const response = await connection.query(
         obj.sql,
-        // TODO: actually map non-basic elements correctly
-        (obj.bindings as unknown[]).map((value) => value?.toString() ?? ""),
+        obj.bindings.flatMap((binding) => this.processBinding(binding)),
       );
 
       obj.response = response;
