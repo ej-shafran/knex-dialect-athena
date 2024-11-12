@@ -1,5 +1,11 @@
 # knex-dialect-athena
 
+## 0.0.11
+
+### Patch Changes
+
+- 58d4992: Properly handle `null` bindings.
+
 ## 0.0.10
 
 ### Patch Changes
