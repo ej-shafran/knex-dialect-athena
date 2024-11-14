@@ -1,7 +1,6 @@
 import Knex from "knex";
-import { AthenaConnection } from "./athena-connection";
+import { AthenaConnection, AthenaConnectionConfig } from "./athena-connection";
 import { QueryCompiler_Athena as QueryCompiler } from "./athena-querycompiler";
-import { AthenaClientConfig } from "@aws-sdk/client-athena";
 // Fixes "non-portable" issue with PNPM
 import type {} from "tarn";
 import { assert } from "./assert";
@@ -10,10 +9,7 @@ import { assert } from "./assert";
 const noOp = () => {};
 
 export function createAthenaDialect(
-  options: AthenaClientConfig & {
-    database: string;
-    outputLocation: string;
-  },
+  config: AthenaConnectionConfig,
 ): typeof Knex.Knex.Client {
   return class Client_Athena extends Knex.Client {
     dialect = "athena";
@@ -23,7 +19,7 @@ export function createAthenaDialect(
     canCancelQuery = false;
 
     acquireConnection() {
-      return new AthenaConnection(options);
+      return new AthenaConnection(config);
     }
 
     releaseConnection = noOp;

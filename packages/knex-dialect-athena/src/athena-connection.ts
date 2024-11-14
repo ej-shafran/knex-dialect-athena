@@ -13,6 +13,12 @@ import { packageDebug } from "./debug";
 
 const debug = packageDebug.extend("connection");
 
+export interface AthenaConnectionConfig extends AthenaClientConfig {
+  database: string;
+  outputLocation: string;
+  workGroup?: string;
+}
+
 export class AthenaConnection {
   private readonly client: AthenaClient;
   private readonly database: string;
@@ -24,11 +30,7 @@ export class AthenaConnection {
     outputLocation,
     workGroup,
     ...config
-  }: AthenaClientConfig & {
-    database: string;
-    outputLocation: string;
-    workGroup?: string;
-  }) {
+  }: AthenaConnectionConfig) {
     this.client = new AthenaClient(config);
     this.database = database;
     this.outputLocation = outputLocation;
