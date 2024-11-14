@@ -17,6 +17,7 @@ export interface AthenaConnectionConfig extends AthenaClientConfig {
   database: string;
   outputLocation: string;
   workGroup?: string;
+  maxTimeoutMilliseconds?: number;
 }
 
 export class AthenaConnection {
@@ -24,17 +25,20 @@ export class AthenaConnection {
   private readonly database: string;
   private readonly outputLocation: string;
   private readonly workGroup?: string;
+  private readonly maxTimeoutMilliseconds: number;
 
   constructor({
     database,
     outputLocation,
     workGroup,
+    maxTimeoutMilliseconds,
     ...config
   }: AthenaConnectionConfig) {
     this.client = new AthenaClient(config);
     this.database = database;
     this.outputLocation = outputLocation;
     this.workGroup = workGroup;
+    this.maxTimeoutMilliseconds = maxTimeoutMilliseconds ?? 30_000;
   }
 
   // Athena Commands
@@ -81,15 +85,13 @@ export class AthenaConnection {
   private async waitForQueryExecution(queryExecutionId: string) {
     debug("starting wait for query execution (id %s)", queryExecutionId);
 
-    // TODO: make configurable by constructor
-    const maxWaitMilliseconds = 30_000;
     const backoffStepMilliseconds = 250;
 
     let overallTimeElapsedMilliseconds = 0;
     let retryInMilliseconds = 0;
     let queryExecution: QueryExecution;
     do {
-      if (overallTimeElapsedMilliseconds < maxWaitMilliseconds) {
+      if (overallTimeElapsedMilliseconds < this.maxTimeoutMilliseconds) {
         retryInMilliseconds += backoffStepMilliseconds;
         overallTimeElapsedMilliseconds += retryInMilliseconds;
       }
@@ -115,7 +117,7 @@ export class AthenaConnection {
     assert(
       !this.isQueryExecutionUnfinished(queryExecution),
       queryExecution,
-      `query did not finish in ${maxWaitMilliseconds.toString()}ms`,
+      `query did not finish in ${this.maxTimeoutMilliseconds.toString()}ms`,
     );
 
     return queryExecution;
