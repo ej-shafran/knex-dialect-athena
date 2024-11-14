@@ -1,5 +1,11 @@
 # knex-dialect-athena
 
+## 0.0.12
+
+### Patch Changes
+
+- af0611a: Make max timeout for queries configurable.
+
 ## 0.0.11
 
 ### Patch Changes
