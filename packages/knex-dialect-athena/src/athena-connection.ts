@@ -17,6 +17,7 @@ export interface AthenaConnectionConfig extends AthenaClientConfig {
   database: string;
   outputLocation: string;
   workGroup?: string;
+  // TODO: add documentation for this option
   maxTimeoutMilliseconds?: number;
 }
 
