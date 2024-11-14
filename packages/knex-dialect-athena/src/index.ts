@@ -5,6 +5,8 @@ import { QueryCompiler_Athena as QueryCompiler } from "./athena-querycompiler";
 import type {} from "tarn";
 import { assert } from "./assert";
 
+// TODO: re-export types from other files
+
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noOp = () => {};
 
